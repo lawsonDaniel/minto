@@ -14,9 +14,14 @@ export default function Home() {
       </Head>
       <main className="p-[20px]">
         <header className="w-full">
-            <h5 className="font-[700] tracking-[1.5px] text-4xl text-red-600 mb-5 italic"  style={{
-                  fontFamily: "'Libre Baskerville', serif",
-                }}>Minto</h5>
+          <h5
+            className="font-[700] tracking-[1.5px] text-4xl text-red-600 mb-5 italic"
+            style={{
+              fontFamily: "'Libre Baskerville', serif",
+            }}
+          >
+            Minto
+          </h5>
         </header>
         <section className=" md:grid-cols-2 grid grid-cols-1 lg:grid-cols-2   h-[700px] w-[100vw] ">
           <div>
@@ -40,10 +45,15 @@ export default function Home() {
                 >
                   Web3
                 </h2>
-                <Image width={64} height={64} src="https://img.icons8.com/wired/64/null/stormtrooper.png" alt={""} />
+                <Image
+                  width={64}
+                  height={64}
+                  src="https://img.icons8.com/wired/64/null/stormtrooper.png"
+                  alt={""}
+                />
               </div>
               <h2
-                className="text-5xl tracking-[1.5px]"
+                className="text-5xl tracking-[1.5px] text-red-600 text-white w-[223px] p-2"
                 style={{
                   fontFamily: "'Libre Baskerville', serif",
                 }}
@@ -61,21 +71,39 @@ export default function Home() {
                 veritatis?
               </p>
               <div className="bg-black flex w-[200px] gap-3 h-[60px] mt-10 items-center  border-black border-[2px]">
-                <button  className=" text-xl text-[100] text-white w-full "
-                style={{
-                  fontFamily: "'Raleway', sans-serif",
-                }}>Connect Wallet</button>
-              <div className="bg-white w-[40%] h-full flex items-center justify-center "> <AiOutlineArrowRight className="text-red-600 font-[400] text-[24px]"/></div>
+                <button
+                  className=" text-xl text-[100] text-white w-full "
+                  style={{
+                    fontFamily: "'Raleway', sans-serif",
+                  }}
+                >
+                  Connect Wallet
+                </button>
+                <div className="bg-white w-[40%] h-full flex items-center justify-center ">
+                  {" "}
+                  <AiOutlineArrowRight className="text-red-600 font-[400] text-[24px]" />
+                </div>
               </div>
             </div>
           </div>
           <div>
-            <div className="h-full w-[100%] md:w-[80%] lg:w-[70%] mx-auto mt-[20px] md:mt-0 " >
+            <div className="h-full w-[100%] md:w-[80%] lg:w-[70%] mx-auto mt-[20px] md:mt-0 ">
               <div className=" flex flex-col  w-[90%] h-full  p-[10px] align-center gap-2 border-[2px] border-black">
-               <Image width={300} height={300} className="w-[300px] h-[300] mx-auto rounded-[100%] border-black border-[2px]" src="/img1.jpg" alt={""} />
-                <p className="font-[600] text-center mt-10 tracking-[1.5px] text-xl uppercase" style={{
-                  fontFamily: "'Raleway', sans-serif",
-                }}>Minting...</p>
+                <Image
+                  width={300}
+                  height={300}
+                  className="w-[300px] h-[300] mx-auto rounded-[100%] border-black border-[2px]"
+                  src="/img1.jpg"
+                  alt={""}
+                />
+                <p
+                  className="font-[600] text-center mt-10 tracking-[1.5px] text-xl uppercase"
+                  style={{
+                    fontFamily: "'Raleway', sans-serif",
+                  }}
+                >
+                  Minting...
+                </p>
               </div>
             </div>
           </div>
