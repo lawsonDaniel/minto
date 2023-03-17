@@ -51,7 +51,7 @@ export default function Home() {
                 DigitalArt
               </h2>
               <p
-                className="mt-10 text-2xl"
+                className="mt-10 text-xl md:text-2xl"
                 style={{
                   fontFamily: "'Raleway', sans-serif",
                 }}
@@ -60,17 +60,17 @@ export default function Home() {
                 quasi porro iure esse rerum. Nam incidunt nihil aliquam libero
                 veritatis?
               </p>
-              <div className="bg-black flex w-[200px] gap-3 h-[50px] mt-10 items-center px-2 ">
-                <button  className=" text-xl text-white"
+              <div className="bg-black flex w-[200px] gap-3 h-[60px] mt-10 items-center  border-black border-[2px]">
+                <button  className=" text-xl text-[100] text-white w-full "
                 style={{
                   fontFamily: "'Raleway', sans-serif",
                 }}>Connect Wallet</button>
-               <AiOutlineArrowRight className="text-white"/>
+              <div className="bg-white w-[40%] h-full flex items-center justify-center "> <AiOutlineArrowRight className="text-red-600 font-[400] text-[24px]"/></div>
               </div>
             </div>
           </div>
           <div>
-            <div className="h-full w-[100%] md:w-[80%] lg:w-[70%] mx-auto mt-[20px] md:mt-0" >
+            <div className="h-full w-[100%] md:w-[80%] lg:w-[70%] mx-auto mt-[20px] md:mt-0 " >
               <div className=" flex flex-col  w-[90%] h-full  p-[10px] align-center gap-2 border-[2px] border-black">
                <Image width={300} height={300} className="w-[300px] h-[300] mx-auto rounded-[100%] border-black border-[2px]" src="/img1.jpg" alt={""} />
                 <p className="font-[600] text-center mt-10 tracking-[1.5px] text-xl uppercase" style={{
