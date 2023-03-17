@@ -53,7 +53,7 @@ export default function Home() {
                 />
               </div>
               <h2
-                className="text-5xl tracking-[1.5px] text-red-600 text-white w-[223px] p-2"
+                className="text-5xl tracking-[1.5px] bg-red-600 text-white w-[223px] p-2"
                 style={{
                   fontFamily: "'Libre Baskerville', serif",
                 }}
