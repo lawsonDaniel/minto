@@ -2,6 +2,8 @@
 import Head from "next/head";
 import Image from "next/image";
 import { AiOutlineArrowRight } from "react-icons/ai";
+import { Profile } from "@/components/Button";
+import { Account } from "@/components/Account";
 
 export default function Home() {
   return (
@@ -12,7 +14,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="p-[20px]">
+      <main className="p-[20px]  h-full w-full">
         <header className="w-full">
           <h5
             className="font-[700] tracking-[1.5px] text-4xl text-red-600 mb-5 italic"
@@ -53,7 +55,7 @@ export default function Home() {
                 />
               </div>
               <h2
-                className="text-5xl tracking-[1.5px] bg-red-600 text-white w-[223px] p-2"
+                className="text-4xl tracking-[1.5px] bg-red-600 text-white w-[200px] p-2"
                 style={{
                   fontFamily: "'Libre Baskerville', serif",
                 }}
@@ -70,20 +72,9 @@ export default function Home() {
                 quasi porro iure esse rerum. Nam incidunt nihil aliquam libero
                 veritatis?
               </p>
-              <div className="bg-black flex w-[200px] gap-3 h-[60px] mt-10 items-center  border-black border-[2px]">
-                <button
-                  className=" text-xl text-[100] text-white w-full "
-                  style={{
-                    fontFamily: "'Raleway', sans-serif",
-                  }}
-                >
-                  Connect Wallet
-                </button>
-                <div className="bg-white w-[40%] h-full flex items-center justify-center ">
-                  {" "}
-                  <AiOutlineArrowRight className="text-red-600 font-[400] text-[24px]" />
-                </div>
-              </div>
+
+              <Profile />
+              <div className="bg-white w-[40%] h-full flex items-center justify-center "></div>
             </div>
           </div>
           <div>
@@ -108,6 +99,7 @@ export default function Home() {
             </div>
           </div>
         </section>
+        <section>< Account/></section>
       </main>
     </>
   );
