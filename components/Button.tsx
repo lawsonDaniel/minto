@@ -10,6 +10,8 @@ import {
   MenuDivider,
   Button,
 } from "@chakra-ui/react";
+import { VscChevronDown } from "react-icons/vsc";
+
 
 export function Profile() {
   const { connect, connectors, error, isLoading, pendingConnector } =
@@ -27,6 +29,7 @@ export function Profile() {
             color: "#fff",
             background: "#000",
           }}
+           rightIcon={<VscChevronDown/>}
         >
           Connect Wallet
         </MenuButton>

@@ -4,8 +4,31 @@ import Image from "next/image";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import { Profile } from "@/components/Button";
 import { Account } from "@/components/Account";
+import {
+  MediaRenderer,
+  useActiveClaimConditionForWallet,
+  useAddress,
+  useClaimConditions,
+  useClaimerProofs,
+  useClaimIneligibilityReasons,
+  useContract,
+  useContractMetadata,
+  useTotalCirculatingSupply,
+  Web3Button,
+} from "@thirdweb-dev/react";
+import { useMemo, useState } from "react";
+import { Skeleton, SkeletonCircle, SkeletonText,Stack } from '@chakra-ui/react'
+
+const myEditionDropContractAddress =
+  "0xa0B1De7eaC31f9ea2625e2fc7917af8F7905bA27";
+
 
 export default function Home() {
+  const { contract: editionDrop } = useContract(myEditionDropContractAddress);
+  const { data: contractMetadata } = useContractMetadata(editionDrop);
+ const tokenId = 0;
+
+  console.log(contractMetadata,'data')
   return (
     <>
       <Head>
@@ -79,14 +102,26 @@ export default function Home() {
           </div>
           <div>
             <div className="h-full w-[100%] md:w-[80%] lg:w-[70%] mx-auto mt-[20px] md:mt-0 ">
-              <div className=" flex flex-col  w-[90%] h-full  p-[10px] align-center gap-2 border-[2px] border-black">
-                <Image
-                  width={300}
-                  height={300}
-                  className="w-[300px] h-[300] mx-auto rounded-[100%] border-black border-[2px]"
-                  src="/img1.jpg"
-                  alt={""}
-                />
+             {
+              contractMetadata ? <div className=" flex flex-col  w-[90%] h-full  p-[10px] align-center gap-2 border-[2px] border-black">
+               <p className="font-[600] text-center mt-10 tracking-[1.5px] text-xl uppercase"
+                  style={{
+                    fontFamily: "'Raleway', sans-serif",
+                  }}>{contractMetadata?.name}</p>
+                 {/* Image Preview of NFTs */}
+               <MediaRenderer
+               className="w-full h-[300px] mx-auto rounded-[10px] border-black border-[2px]"
+                src={contractMetadata?.image}
+                alt={`${contractMetadata?.name} preview image`}
+              />
+              <p
+                  className="font-[200] text-center mt-10 tracking-[1.5px] text-xl"
+                  style={{
+                    fontFamily: "'Raleway', sans-serif",
+                  }}
+                >
+                 {contractMetadata?.description}
+                </p>
                 <p
                   className="font-[600] text-center mt-10 tracking-[1.5px] text-xl uppercase"
                   style={{
@@ -95,7 +130,13 @@ export default function Home() {
                 >
                   Minting...
                 </p>
-              </div>
+               
+              </div> :  <div className=" flex flex-col  w-[90%] h-full  p-[10px] align-center gap-2 border-[2px] border-black">
+                  <SkeletonText mt='4' noOfLines={1} spacing='4'  skeletonHeight='50px' />
+                  <Skeleton height='300px' width="300px" mx="auto" rounded="10px" />
+                  <Skeleton height='50px' mt="5" />
+                </div>
+             }
             </div>
           </div>
         </section>

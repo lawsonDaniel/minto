@@ -2,7 +2,7 @@ import { WagmiConfig, createClient, configureChains, mainnet } from "wagmi";
 
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
-
+import { ThirdwebProvider } from "@thirdweb-dev/react";
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
@@ -49,11 +49,14 @@ export default function App({ Component, pageProps }: AppProps) {
     webSocketProvider,
   });
 
-  return (
-    <ChakraProvider>
+  return ( 
+  <ThirdwebProvider  activeChain="mumbai">
+      <ChakraProvider>
       <WagmiConfig client={client}>
         <Component {...pageProps} />
       </WagmiConfig>
     </ChakraProvider>
+  </ThirdwebProvider>
+    
   );
 }

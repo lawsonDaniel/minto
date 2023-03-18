@@ -6,6 +6,8 @@ import {  useAccount,
   useEnsName,
 } from "wagmi";
 import Image from "next/image";
+
+
 export function Account() {
   const { address, connector, isConnected } = useAccount();
   const { data: ensAvatar } = useEnsAvatar({ address });
