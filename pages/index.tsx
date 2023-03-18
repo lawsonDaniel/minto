@@ -19,7 +19,7 @@ import {
 import { useAccount } from "wagmi";
 import { useMemo, useState } from "react";
 import { Skeleton, SkeletonCircle, SkeletonText } from "@chakra-ui/react";
-
+import { BigNumber, utils } from "ethers";
 const myEditionDropContractAddress =
   "0xa0B1De7eaC31f9ea2625e2fc7917af8F7905bA27";
 
@@ -30,6 +30,115 @@ export default function Home() {
   const [quantity, setQuantity] = useState(0);
   //get address of conected wallet
   const { address, connector, isConnected } = useAccount();
+  const claimConditions = useClaimConditions(editionDrop);
+  const activeClaimCondition = useActiveClaimConditionForWallet(
+    editionDrop,
+    address,
+    tokenId
+  );
+  const claimerProofs = useClaimerProofs(editionDrop, address || "", tokenId);
+  const claimIneligibilityReasons = useClaimIneligibilityReasons(
+    editionDrop,
+    {
+      quantity,
+      walletAddress: address || "",
+    },
+    tokenId
+  );
+
+  const claimedSupply = useTotalCirculatingSupply(editionDrop, tokenId);
+
+  const totalAvailableSupply = useMemo(() => {
+    try {
+      return BigNumber.from(activeClaimCondition.data?.availableSupply || 0);
+    } catch {
+      return BigNumber.from(1_000_000);
+    }
+  }, [activeClaimCondition.data?.availableSupply]);
+
+  const numberClaimed = useMemo(() => {
+    return BigNumber.from(claimedSupply.data || 0).toString();
+  }, [claimedSupply]);
+
+  const numberTotal = useMemo(() => {
+    const n = totalAvailableSupply.add(BigNumber.from(claimedSupply.data || 0));
+    if (n.gte(1_000_000)) {
+      return "";
+    }
+    return n.toString();
+  }, [totalAvailableSupply, claimedSupply]);
+
+  const priceToMint = useMemo(() => {
+    const bnPrice = BigNumber.from(
+      activeClaimCondition.data?.currencyMetadata.value || 0
+    );
+    return `${utils.formatUnits(
+      bnPrice.mul(quantity).toString(),
+      activeClaimCondition.data?.currencyMetadata.decimals || 18
+    )} ${activeClaimCondition.data?.currencyMetadata.symbol}`;
+  }, [
+    activeClaimCondition.data?.currencyMetadata.decimals,
+    activeClaimCondition.data?.currencyMetadata.symbol,
+    activeClaimCondition.data?.currencyMetadata.value,
+    quantity,
+  ]);
+
+  const maxClaimable = useMemo(() => {
+    let bnMaxClaimable;
+    try {
+      bnMaxClaimable = BigNumber.from(
+        activeClaimCondition.data?.maxClaimableSupply || 0
+      );
+    } catch (e) {
+      bnMaxClaimable = BigNumber.from(1_000_000);
+    }
+
+    let perTransactionClaimable;
+    try {
+      perTransactionClaimable = BigNumber.from(
+        activeClaimCondition.data?.maxClaimablePerWallet || 0
+      );
+    } catch (e) {
+      perTransactionClaimable = BigNumber.from(1_000_000);
+    }
+
+    if (perTransactionClaimable.lte(bnMaxClaimable)) {
+      bnMaxClaimable = perTransactionClaimable;
+    }
+
+    const snapshotClaimable = claimerProofs.data?.maxClaimable;
+
+    if (snapshotClaimable) {
+      if (snapshotClaimable === "0") {
+        // allowed unlimited for the snapshot
+        bnMaxClaimable = BigNumber.from(1_000_000);
+      } else {
+        try {
+          bnMaxClaimable = BigNumber.from(snapshotClaimable);
+        } catch (e) {
+          // fall back to default case
+        }
+      }
+    }
+
+    let max;
+    if (totalAvailableSupply.lt(bnMaxClaimable)) {
+      max = totalAvailableSupply;
+    } else {
+      max = bnMaxClaimable;
+    }
+
+    if (max.gte(1_000_000)) {
+      return 1_000_000;
+    }
+    return max.toNumber();
+  }, [
+    claimerProofs.data?.maxClaimable,
+    totalAvailableSupply,
+    activeClaimCondition.data?.maxClaimableSupply,
+    activeClaimCondition.data?.maxClaimablePerWallet,
+  ]);
+
   console.log(contractMetadata, address, "data");
   return (
     <>
@@ -139,6 +248,7 @@ export default function Home() {
                   <div className="flex items-center justify-center gap-[20px]">
                     <button
                       onClick={() => setQuantity((_) => _ + 1)}
+                       disabled={quantity >= maxClaimable}
                       className="text-[20px] font-bold bg-slate-300 rounded-full h-[50px] w-[50px]"
                     >
                       +
@@ -146,6 +256,7 @@ export default function Home() {
                     <span>{quantity}</span>
                     <button
                       onClick={() => setQuantity((_) => _ - 1)}
+                      disabled={quantity <= 1}
                       className="text-[20px] font-bold bg-slate-300 rounded-full h-[50px] w-[50px]"
                     >
                       -
