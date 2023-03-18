@@ -16,19 +16,21 @@ import {
   useTotalCirculatingSupply,
   Web3Button,
 } from "@thirdweb-dev/react";
+import { useAccount } from "wagmi";
 import { useMemo, useState } from "react";
-import { Skeleton, SkeletonCircle, SkeletonText,Stack } from '@chakra-ui/react'
+import { Skeleton, SkeletonCircle, SkeletonText } from "@chakra-ui/react";
 
 const myEditionDropContractAddress =
   "0xa0B1De7eaC31f9ea2625e2fc7917af8F7905bA27";
 
-
 export default function Home() {
   const { contract: editionDrop } = useContract(myEditionDropContractAddress);
   const { data: contractMetadata } = useContractMetadata(editionDrop);
- const tokenId = 0;
-
-  console.log(contractMetadata,'data')
+  const tokenId = 0;
+  const [quantity, setQuantity] = useState(0);
+  //get address of conected wallet
+  const { address, connector, isConnected } = useAccount();
+  console.log(contractMetadata, address, "data");
   return (
     <>
       <Head>
@@ -102,45 +104,103 @@ export default function Home() {
           </div>
           <div>
             <div className="h-full w-[100%] md:w-[80%] lg:w-[70%] mx-auto mt-[20px] md:mt-0 ">
-             {
-              contractMetadata ? <div className=" flex flex-col  w-[90%] h-full  p-[10px] align-center gap-2 border-[2px] border-black">
-               <p className="font-[600] text-center mt-10 tracking-[1.5px] text-xl uppercase"
-                  style={{
-                    fontFamily: "'Raleway', sans-serif",
-                  }}>{contractMetadata?.name}</p>
-                 {/* Image Preview of NFTs */}
-               <MediaRenderer
-               className="w-full h-[300px] mx-auto rounded-[10px] border-black border-[2px]"
-                src={contractMetadata?.image}
-                alt={`${contractMetadata?.name} preview image`}
-              />
-              <p
-                  className="font-[200] text-center mt-10 tracking-[1.5px] text-xl"
-                  style={{
-                    fontFamily: "'Raleway', sans-serif",
-                  }}
-                >
-                 {contractMetadata?.description}
-                </p>
-                <p
-                  className="font-[600] text-center mt-10 tracking-[1.5px] text-xl uppercase"
-                  style={{
-                    fontFamily: "'Raleway', sans-serif",
-                  }}
-                >
-                  Minting...
-                </p>
-               
-              </div> :  <div className=" flex flex-col  w-[90%] h-full  p-[10px] align-center gap-2 border-[2px] border-black">
-                  <SkeletonText mt='4' noOfLines={1} spacing='4'  skeletonHeight='50px' />
-                  <Skeleton height='300px' width="300px" mx="auto" rounded="10px" />
-                  <Skeleton height='50px' mt="5" />
+              {contractMetadata ? (
+                <div className=" flex flex-col  w-[90%] h-full  p-[10px] align-center gap-2 border-[2px] border-black">
+                  <p
+                    className="font-[600] text-center mt-10 tracking-[1.5px] text-xl uppercase"
+                    style={{
+                      fontFamily: "'Raleway', sans-serif",
+                    }}
+                  >
+                    {contractMetadata?.name}
+                  </p>
+                  {/* Image Preview of NFTs */}
+                  <MediaRenderer
+                    className="w-full h-[300px] mx-auto rounded-[10px] border-black border-[2px]"
+                    src={contractMetadata?.image}
+                    alt={`${contractMetadata?.name} preview image`}
+                  />
+                  <p
+                    className="font-[200] text-center mt-10 tracking-[1.5px] text-xl"
+                    style={{
+                      fontFamily: "'Raleway', sans-serif",
+                    }}
+                  >
+                    {contractMetadata?.description}
+                  </p>
+                  <p
+                    className="font-[400] text-center my-5 tracking-[1.5px] text-xl"
+                    style={{
+                      fontFamily: "'Raleway', sans-serif",
+                    }}
+                  >
+                    Quantity
+                  </p>
+                  <div className="flex items-center justify-center gap-[20px]">
+                    <button
+                      onClick={() => setQuantity((_) => _ + 1)}
+                      className="text-[20px] font-bold bg-slate-300 rounded-full h-[50px] w-[50px]"
+                    >
+                      +
+                    </button>
+                    <span>{quantity}</span>
+                    <button
+                      onClick={() => setQuantity((_) => _ - 1)}
+                      className="text-[20px] font-bold bg-slate-300 rounded-full h-[50px] w-[50px]"
+                    >
+                      -
+                    </button>
+                  </div>
+
+                  <p
+                    className="font-[600] text-center mt-10 tracking-[1.5px] text-xl uppercase"
+                    style={{
+                      fontFamily: "'Raleway', sans-serif",
+                    }}
+                  >
+                    Minting...
+                  </p>
                 </div>
-             }
+              ) : (
+                <div className=" flex flex-col  w-[90%] h-full  p-[10px] align-center gap-2 border-[2px] border-gray-300">
+                  <SkeletonText
+                    mt="4"
+                    noOfLines={1}
+                    spacing="4"
+                    skeletonHeight="50px"
+                  />
+                  <Skeleton
+                    height="300px"
+                    width="300px"
+                    mx="auto"
+                    rounded="10px"
+                  />
+                  <Skeleton height="50px" mt="5" />
+                  <Skeleton height="50px" mt="5" />
+                  <div className="flex items-center justify-center gap-[20px]">
+                    <Skeleton
+                      className="text-[20px] font-bold bg-slate-300 rounded-full h-[50px] w-[50px]"
+                      rounded="100%"
+                    />
+                    <SkeletonText
+                      mt="4"
+                      noOfLines={1}
+                      spacing="4"
+                      skeletonHeight="50px"
+                    />
+                    <Skeleton
+                      className="text-[20px] font-bold bg-slate-300 rounded-full h-[50px] w-[50px]"
+                      rounded="100%"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </section>
-        <section>< Account/></section>
+        <section>
+          <Account />
+        </section>
       </main>
     </>
   );

@@ -49,14 +49,13 @@ export default function App({ Component, pageProps }: AppProps) {
     webSocketProvider,
   });
 
-  return ( 
-  <ThirdwebProvider  activeChain="mumbai">
+  return (
+    <ThirdwebProvider activeChain="mumbai">
       <ChakraProvider>
-      <WagmiConfig client={client}>
-        <Component {...pageProps} />
-      </WagmiConfig>
-    </ChakraProvider>
-  </ThirdwebProvider>
-    
+        <WagmiConfig client={client}>
+          <Component {...pageProps} />
+        </WagmiConfig>
+      </ChakraProvider>
+    </ThirdwebProvider>
   );
 }

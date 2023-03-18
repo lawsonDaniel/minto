@@ -1,12 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
-import {  useAccount,
+import {
+  useAccount,
   useConnect,
   useDisconnect,
   useEnsAvatar,
   useEnsName,
 } from "wagmi";
 import Image from "next/image";
-
 
 export function Account() {
   const { address, connector, isConnected } = useAccount();
@@ -42,8 +42,6 @@ export function Account() {
             " (connecting)"}
         </button>
       ))}
-
-     
     </div>
   );
-          }
+}
