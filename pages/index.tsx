@@ -14,12 +14,15 @@ import {
   useContract,
   useContractMetadata,
   useTotalCirculatingSupply,
-  Web3Button,
+  useClaimNFT
 } from "@thirdweb-dev/react";
 import { useAccount } from "wagmi";
 import { useMemo, useState } from "react";
 import { Skeleton, SkeletonCircle, SkeletonText } from "@chakra-ui/react";
 import { BigNumber, utils } from "ethers";
+import { parseIneligibility } from "@/utils/parseIneligibility";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import "@rainbow-me/rainbowkit/styles.css";
 const myEditionDropContractAddress =
   "0xa0B1De7eaC31f9ea2625e2fc7917af8F7905bA27";
 
@@ -28,6 +31,8 @@ export default function Home() {
   const { data: contractMetadata } = useContractMetadata(editionDrop);
   const tokenId = 0;
   const [quantity, setQuantity] = useState(0);
+const { mutate: claimNft,isLoading, error } = useClaimNFT(editionDrop)
+console.log(error,'error')
   //get address of conected wallet
   const { address, connector, isConnected } = useAccount();
   const claimConditions = useClaimConditions(editionDrop);
@@ -121,7 +126,7 @@ export default function Home() {
       }
     }
 
-    let max;
+     let max;
     if (totalAvailableSupply.lt(bnMaxClaimable)) {
       max = totalAvailableSupply;
     } else {
@@ -139,7 +144,76 @@ export default function Home() {
     activeClaimCondition.data?.maxClaimablePerWallet,
   ]);
 
-  console.log(contractMetadata, address, "data");
+  const isSoldOut = useMemo(() => {
+    try {
+      return (
+        (activeClaimCondition.isSuccess &&
+          BigNumber.from(activeClaimCondition.data?.availableSupply || 0).lte(
+            0
+          )) ||
+        numberClaimed === numberTotal
+      );
+    } catch (e) {
+      return false;
+    }
+  }, [
+    activeClaimCondition.data?.availableSupply,
+    activeClaimCondition.isSuccess,
+    numberClaimed,
+    numberTotal,
+  ]);
+
+  const canClaim = useMemo(() => {
+    return (
+      activeClaimCondition.isSuccess &&
+      claimIneligibilityReasons.isSuccess &&
+      claimIneligibilityReasons.data?.length === 0 &&
+      !isSoldOut
+    );
+  }, [
+    activeClaimCondition.isSuccess,
+    claimIneligibilityReasons.data?.length,
+    claimIneligibilityReasons.isSuccess,
+    isSoldOut,
+  ]);
+
+  const buttonLoading = useMemo(
+    () => isLoading || claimIneligibilityReasons.isLoading,
+    [claimIneligibilityReasons.isLoading, isLoading]
+  );
+  const buttonText = useMemo(() => {
+    if (isSoldOut) {
+      return "Sold Out";
+    }
+
+    if (canClaim) {
+      const pricePerToken = BigNumber.from(
+        activeClaimCondition.data?.currencyMetadata.value || 0
+      );
+      if (pricePerToken.eq(0)) {
+        return "Mint (Free)";
+      }
+      return `Mint (${priceToMint})`;
+    }
+    if (claimIneligibilityReasons.data?.length) {
+      return parseIneligibility(claimIneligibilityReasons.data, quantity);
+    }
+    if (buttonLoading) {
+      return "Checking eligibility...";
+    }
+
+    return "Claiming not available";
+  }, [
+    isSoldOut,
+    canClaim,
+    claimIneligibilityReasons.data,
+    buttonLoading,
+    activeClaimCondition.data?.currencyMetadata.value,
+    priceToMint,
+    quantity,
+  ]);
+
+  
   return (
     <>
       <Head>
@@ -208,6 +282,7 @@ export default function Home() {
               </p>
 
               <Profile />
+             
               <div className="bg-white w-[40%] h-full flex items-center justify-center "></div>
             </div>
           </div>
@@ -262,7 +337,7 @@ export default function Home() {
                       -
                     </button>
                   </div>
-
+                    
                   <p
                     className="font-[600] text-center mt-10 tracking-[1.5px] text-xl uppercase"
                     style={{
@@ -271,6 +346,28 @@ export default function Home() {
                   >
                     Minting...
                   </p>
+                  {/* <Web3Button
+                        contractAddress={editionDrop?.getAddress() || ""}
+                        action={(cntr) => console.log(cntr,"context")}
+                        isDisabled={!canClaim || buttonLoading}
+                        onError={(err) => {
+                          console.error(err);
+                          alert("Error claiming NFTs");
+                        }}
+                        onSuccess={() => {
+                          setQuantity(1);
+                          alert("Successfully claimed NFTs");
+                        }}
+                      >
+                        {buttonLoading ? "Loading..." : buttonText}
+                      </Web3Button>
+                      <ConnectWallet /> */}
+                       <button  disabled={isLoading}
+                       onClick={()=> claimNft({to: address,
+                      tokenId:0,
+                      quantity:quantity
+                      })}
+       >{isLoading ? 'loading' : "mint"}</button>
                 </div>
               ) : (
                 <div className=" flex flex-col  w-[90%] h-full  p-[10px] align-center gap-2 border-[2px] border-gray-300">
@@ -285,25 +382,10 @@ export default function Home() {
                     width="300px"
                     mx="auto"
                     rounded="10px"
+                    
                   />
-                  <Skeleton height="50px" mt="5" />
-                  <Skeleton height="50px" mt="5" />
-                  <div className="flex items-center justify-center gap-[20px]">
-                    <Skeleton
-                      className="text-[20px] font-bold bg-slate-300 rounded-full h-[50px] w-[50px]"
-                      rounded="100%"
-                    />
-                    <SkeletonText
-                      mt="4"
-                      noOfLines={1}
-                      spacing="4"
-                      skeletonHeight="50px"
-                    />
-                    <Skeleton
-                      className="text-[20px] font-bold bg-slate-300 rounded-full h-[50px] w-[50px]"
-                      rounded="100%"
-                    />
-                  </div>
+                  <Skeleton  height="250px" mt="5" />
+                  
                 </div>
               )}
             </div>
