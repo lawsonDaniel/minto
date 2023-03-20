@@ -2,7 +2,7 @@ import { WagmiConfig, createClient, configureChains, mainnet,useSigner } from 'w
  
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
- 
+
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
@@ -63,7 +63,7 @@ const client = createClient({
     <ThirdwebSDKProvider
       activeChain="mumbai"
       signer={signer as any}
-      queryClient={wagmiClient.queryClient as any}
+     
     >
       {children}
     </ThirdwebSDKProvider>

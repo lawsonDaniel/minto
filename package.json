@@ -12,7 +12,6 @@
     "@chakra-ui/react": "^2.5.1",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
-    "@rainbow-me/rainbowkit": "^0.12.1",
     "@thirdweb-dev/react": "^3.10.3",
     "@thirdweb-dev/sdk": "^3.10.3",
     "@types/node": "18.15.3",
