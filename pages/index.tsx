@@ -37,6 +37,7 @@ export default function Home() {
       duration: 5000,
       isClosable: true,
     });
+    console.log(error);
   }
   //get address of conected wallet
   const { address, connector, isConnected } = useAccount();
