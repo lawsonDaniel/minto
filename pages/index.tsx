@@ -15,7 +15,7 @@ import {
 } from "@thirdweb-dev/react";
 import { useAccount } from "wagmi";
 import { useMemo, useState } from "react";
-import { Skeleton, SkeletonCircle, SkeletonText } from "@chakra-ui/react";
+import { Skeleton, SkeletonText } from "@chakra-ui/react";
 import { BigNumber, utils } from "ethers";
 import { parseIneligibility } from "@/utils/parseIneligibility";
 import { useToast } from "@chakra-ui/react";

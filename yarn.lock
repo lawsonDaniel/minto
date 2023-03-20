@@ -7540,9 +7540,6 @@
   "resolved" "https://registry.npmjs.org/text-table/-/text-table-0.2.0.tgz"
   "version" "0.2.0"
 
-"thirdweb-react-monorepo@github:thirdweb-dev/react":
-  "resolved" "git+ssh://git@github.com/thirdweb-dev/react.git#90c11e5b9cbe5c2a4f56817e7f8c70f39ceb44d2"
-
 "thread-stream@^0.15.1":
   "integrity" "sha512-UkEhKIg2pD+fjkHQKyJO3yoIvAP3N6RlNFt2dUhcS1FGvCD1cQa1M/PGknCLFIyZdtJOWQjejp7bdNqmN7zwdA=="
   "resolved" "https://registry.npmjs.org/thread-stream/-/thread-stream-0.15.2.tgz"
