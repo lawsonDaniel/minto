@@ -4,7 +4,6 @@ import Image from "next/image";
 import {
   MediaRenderer,
   useActiveClaimConditionForWallet,
-  useClaimConditions,
   useClaimerProofs,
   useClaimIneligibilityReasons,
   useContract,
@@ -12,13 +11,11 @@ import {
   useTotalCirculatingSupply,
   useClaimNFT,
   useAddress,
- ConnectWallet,
-
+  ConnectWallet,
 } from "@thirdweb-dev/react";
 import { useMemo, useState } from "react";
 import { Skeleton, SkeletonText } from "@chakra-ui/react";
 import { BigNumber, utils } from "ethers";
-import { parseIneligibility } from "@/utils/parseIneligibility";
 import { useToast } from "@chakra-ui/react";
 const myEditionDropContractAddress =
   "0x6540D7c31d30554b1f31eF7F0882c3b13be762A1";
@@ -29,8 +26,14 @@ export default function Home() {
   const tokenId = 0;
   const toast = useToast();
   const [quantity, setQuantity] = useState(1);
-  const { mutate: claimNft, isLoading, error,isSuccess,reset } = useClaimNFT(editionDrop);
-  
+  const {
+    mutate: claimNft,
+    isLoading,
+    error,
+    isSuccess,
+    reset,
+  } = useClaimNFT(editionDrop);
+
   // check if the tranaction was successful
   if (error) {
     toast({
@@ -40,9 +43,9 @@ export default function Home() {
       duration: 5000,
       isClosable: true,
     });
-    reset()
+    reset();
   }
-   if (isSuccess) {
+  if (isSuccess) {
     toast({
       title: "NFT claimed successfully",
       description: "NFT claimed successfully",
@@ -50,10 +53,10 @@ export default function Home() {
       duration: 5000,
       isClosable: true,
     });
-    reset()
+    reset();
   }
   //get address of conected wallet
- const address = useAddress();
+  const address = useAddress();
 
   const activeClaimCondition = useActiveClaimConditionForWallet(
     editionDrop,
@@ -200,7 +203,6 @@ export default function Home() {
     () => isLoading || claimIneligibilityReasons.isLoading,
     [claimIneligibilityReasons.isLoading, isLoading]
   );
-  
 
   return (
     <>
@@ -268,8 +270,9 @@ export default function Home() {
                 quasi porro iure esse rerum. Nam incidunt nihil aliquam libero
                 veritatis?
               </p>
-              <div className="bg-white w-[40%] h-full flex items-center justify-center "></div>
-             <ConnectWallet />
+              <div className=" w-[200px] h-[60px]">
+                <ConnectWallet />
+              </div>
             </div>
           </div>
           <div>
@@ -323,7 +326,8 @@ export default function Home() {
                       -
                     </button>
                   </div>
-                 {address && <button
+                  {address && (
+                    <button
                       className="bg-black text-xl text-[100] h-[60px] w-[200px] mx-auto text-white mt-2"
                       disabled={isLoading}
                       onClick={() =>
@@ -335,30 +339,29 @@ export default function Home() {
                       }
                     >
                       {isLoading ? "Minting" : "Mint(Free)"}
-                    </button>}
-                    
+                    </button>
+                  )}
                 </div>
               ) : (
                 <>
                   <div className="h-full w-[100%] md:w-[80%] lg:w-[70%] mx-auto mt-[20px] md:mt-0 ">
-                         <div className=" flex flex-col  w-[90%] h-full   p-[10px] align-center gap-2 border-[2px] border-gray-300">
-                          <SkeletonText
-                            mt="4"
-                            noOfLines={1}
-                            spacing="4"
-                            skeletonHeight="50px"
-                          />
-                          <Skeleton
-                            height="300px"
-                            width="100%"
-                            mx="auto"
-                            rounded="10px"
-                          />
-                          <Skeleton height="250px" mt="5" />
-                        </div>
+                    <div className=" flex flex-col  w-[90%] h-full   p-[10px] align-center gap-2 border-[2px] border-gray-300">
+                      <SkeletonText
+                        mt="4"
+                        noOfLines={1}
+                        spacing="4"
+                        skeletonHeight="50px"
+                      />
+                      <Skeleton
+                        height="300px"
+                        width="100%"
+                        mx="auto"
+                        rounded="10px"
+                      />
+                      <Skeleton height="250px" mt="5" />
+                    </div>
                   </div>
                 </>
-               
               )}
             </div>
           </div>

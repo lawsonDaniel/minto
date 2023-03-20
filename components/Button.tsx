@@ -19,14 +19,9 @@ import {
 import { VscChevronDown } from "react-icons/vsc";
 
 export function Profile() {
- 
   const { connect, connectors, error, isLoading, pendingConnector } =
     useConnect();
   const { disconnect } = useDisconnect();
 
-  return (
-    <div className="mt-10 flex flex-col gap-[10px]">
-     
-    </div>
-  );
+  return <div className="mt-10 flex flex-col gap-[10px]"></div>;
 }
