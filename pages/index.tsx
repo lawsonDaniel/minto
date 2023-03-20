@@ -1,26 +1,24 @@
 /* eslint-disable jsx-a11y/alt-text */
 import Head from "next/head";
 import Image from "next/image";
-import { AiOutlineArrowRight } from "react-icons/ai";
 import { Profile } from "@/components/Button";
 import {
   MediaRenderer,
   useActiveClaimConditionForWallet,
-  useAddress,
   useClaimConditions,
   useClaimerProofs,
   useClaimIneligibilityReasons,
   useContract,
   useContractMetadata,
   useTotalCirculatingSupply,
-  useClaimNFT
+  useClaimNFT,
 } from "@thirdweb-dev/react";
 import { useAccount } from "wagmi";
 import { useMemo, useState } from "react";
 import { Skeleton, SkeletonCircle, SkeletonText } from "@chakra-ui/react";
 import { BigNumber, utils } from "ethers";
 import { parseIneligibility } from "@/utils/parseIneligibility";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useToast } from "@chakra-ui/react";
 import "@rainbow-me/rainbowkit/styles.css";
 const myEditionDropContractAddress =
   "0x6540D7c31d30554b1f31eF7F0882c3b13be762A1";
@@ -29,9 +27,18 @@ export default function Home() {
   const { contract: editionDrop } = useContract(myEditionDropContractAddress);
   const { data: contractMetadata } = useContractMetadata(editionDrop);
   const tokenId = 0;
-  const [quantity, setQuantity] = useState(0);
-const { mutate: claimNft,isLoading, error } = useClaimNFT(editionDrop)
-console.log(error,'error')
+  const toast = useToast();
+  const [quantity, setQuantity] = useState(1);
+  const { mutate: claimNft, isLoading, error } = useClaimNFT(editionDrop);
+  if (error) {
+    toast({
+      title: "An error occured",
+      description: "error",
+      status: "error",
+      duration: 9000,
+      isClosable: true,
+    });
+  }
   //get address of conected wallet
   const { address, connector, isConnected } = useAccount();
   const claimConditions = useClaimConditions(editionDrop);
@@ -125,7 +132,7 @@ console.log(error,'error')
       }
     }
 
-     let max;
+    let max;
     if (totalAvailableSupply.lt(bnMaxClaimable)) {
       max = totalAvailableSupply;
     } else {
@@ -212,7 +219,6 @@ console.log(error,'error')
     quantity,
   ]);
 
- 
   return (
     <>
       <Head>
@@ -281,7 +287,7 @@ console.log(error,'error')
               </p>
 
               <Profile />
-             
+
               <div className="bg-white w-[40%] h-full flex items-center justify-center "></div>
             </div>
           </div>
@@ -322,7 +328,7 @@ console.log(error,'error')
                   <div className="flex items-center justify-center gap-[20px] mb-2">
                     <button
                       onClick={() => setQuantity((_) => _ + 1)}
-                       disabled={quantity >= maxClaimable}
+                      disabled={quantity >= maxClaimable}
                       className="text-[20px] font-bold bg-slate-300 rounded-full h-[50px] w-[50px] "
                     >
                       +
@@ -335,15 +341,22 @@ console.log(error,'error')
                     >
                       -
                     </button>
-                  </div>                 
-                      {
-                        isConnected &&  <button  className="bg-black text-xl text-[100] h-[60px] w-[200px] mx-auto text-white mt-2"  disabled={isLoading}
-                       onClick={()=> claimNft({to: address,
-                      tokenId:0,
-                      quantity:quantity
-                      })}
-       >{isLoading ? 'Minting' : "Mint"}</button>
+                  </div>
+                  {isConnected && (
+                    <button
+                      className="bg-black text-xl text-[100] h-[60px] w-[200px] mx-auto text-white mt-2"
+                      disabled={isLoading}
+                      onClick={() =>
+                        claimNft({
+                          to: address,
+                          tokenId: 0,
+                          quantity: quantity,
+                        })
                       }
+                    >
+                      {isLoading ? "Minting" : "Mint"}
+                    </button>
+                  )}
                 </div>
               ) : (
                 <div className=" flex flex-col  w-[90%] h-full mx-auto  p-[10px] align-center gap-2 border-[2px] border-gray-300">
@@ -358,16 +371,13 @@ console.log(error,'error')
                     width="100%"
                     mx="auto"
                     rounded="10px"
-                    
                   />
-                  <Skeleton  height="250px" mt="5" />
-                  
+                  <Skeleton height="250px" mt="5" />
                 </div>
               )}
             </div>
           </div>
         </section>
-       
       </main>
     </>
   );
