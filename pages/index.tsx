@@ -34,7 +34,7 @@ export default function Home() {
       title: "An error occured",
       description: "error",
       status: "error",
-      duration: 9000,
+      duration: 5000,
       isClosable: true,
     });
   }
