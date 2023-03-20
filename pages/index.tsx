@@ -334,7 +334,7 @@ export default function Home() {
                         })
                       }
                     >
-                      {isLoading ? "Minting" : "Mint"}
+                      {isLoading ? "Minting" : "Mint(Free)"}
                     </button>}
                     
                 </div>
