@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import Head from "next/head";
 import Image from "next/image";
-import { Profile } from "@/components/Button";
 import {
   MediaRenderer,
   useActiveClaimConditionForWallet,
@@ -12,8 +11,10 @@ import {
   useContractMetadata,
   useTotalCirculatingSupply,
   useClaimNFT,
+  useAddress,
+ ConnectWallet,
+
 } from "@thirdweb-dev/react";
-import { useAccount } from "wagmi";
 import { useMemo, useState } from "react";
 import { Skeleton, SkeletonText } from "@chakra-ui/react";
 import { BigNumber, utils } from "ethers";
@@ -28,7 +29,9 @@ export default function Home() {
   const tokenId = 0;
   const toast = useToast();
   const [quantity, setQuantity] = useState(1);
-  const { mutate: claimNft, isLoading, error } = useClaimNFT(editionDrop);
+  const { mutate: claimNft, isLoading, error,isSuccess,reset } = useClaimNFT(editionDrop);
+  
+  // check if the tranaction was successful
   if (error) {
     toast({
       title: "An error occured",
@@ -37,11 +40,21 @@ export default function Home() {
       duration: 5000,
       isClosable: true,
     });
-    console.log(error);
+    reset()
+  }
+   if (isSuccess) {
+    toast({
+      title: "NFT claimed successfully",
+      description: "NFT claimed successfully",
+      status: "success",
+      duration: 5000,
+      isClosable: true,
+    });
+    reset()
   }
   //get address of conected wallet
-  const { address, connector, isConnected } = useAccount();
-  const claimConditions = useClaimConditions(editionDrop);
+ const address = useAddress();
+
   const activeClaimCondition = useActiveClaimConditionForWallet(
     editionDrop,
     address,
@@ -187,37 +200,7 @@ export default function Home() {
     () => isLoading || claimIneligibilityReasons.isLoading,
     [claimIneligibilityReasons.isLoading, isLoading]
   );
-  const buttonText = useMemo(() => {
-    if (isSoldOut) {
-      return "Sold Out";
-    }
-
-    if (canClaim) {
-      const pricePerToken = BigNumber.from(
-        activeClaimCondition.data?.currencyMetadata.value || 0
-      );
-      if (pricePerToken.eq(0)) {
-        return "Mint (Free)";
-      }
-      return `Mint (${priceToMint})`;
-    }
-    if (claimIneligibilityReasons.data?.length) {
-      return parseIneligibility(claimIneligibilityReasons.data, quantity);
-    }
-    if (buttonLoading) {
-      return "Checking eligibility...";
-    }
-
-    return "Claiming not available";
-  }, [
-    isSoldOut,
-    canClaim,
-    claimIneligibilityReasons.data,
-    buttonLoading,
-    activeClaimCondition.data?.currencyMetadata.value,
-    priceToMint,
-    quantity,
-  ]);
+  
 
   return (
     <>
@@ -285,10 +268,8 @@ export default function Home() {
                 quasi porro iure esse rerum. Nam incidunt nihil aliquam libero
                 veritatis?
               </p>
-
-              <Profile />
-
               <div className="bg-white w-[40%] h-full flex items-center justify-center "></div>
+             <ConnectWallet />
             </div>
           </div>
           <div>
@@ -342,8 +323,7 @@ export default function Home() {
                       -
                     </button>
                   </div>
-                  {isConnected && (
-                    <button
+                 {address && <button
                       className="bg-black text-xl text-[100] h-[60px] w-[200px] mx-auto text-white mt-2"
                       disabled={isLoading}
                       onClick={() =>
@@ -355,8 +335,8 @@ export default function Home() {
                       }
                     >
                       {isLoading ? "Minting" : "Mint"}
-                    </button>
-                  )}
+                    </button>}
+                    
                 </div>
               ) : (
                 <>
