@@ -359,21 +359,26 @@ export default function Home() {
                   )}
                 </div>
               ) : (
-                <div className=" flex flex-col  w-[90%] h-full mx-auto  p-[10px] align-center gap-2 border-[2px] border-gray-300">
-                  <SkeletonText
-                    mt="4"
-                    noOfLines={1}
-                    spacing="4"
-                    skeletonHeight="50px"
-                  />
-                  <Skeleton
-                    height="300px"
-                    width="100%"
-                    mx="auto"
-                    rounded="10px"
-                  />
-                  <Skeleton height="250px" mt="5" />
-                </div>
+                <>
+                  <div className="h-full w-[100%] md:w-[80%] lg:w-[70%] mx-auto mt-[20px] md:mt-0 ">
+                         <div className=" flex flex-col  w-[90%] h-full   p-[10px] align-center gap-2 border-[2px] border-gray-300">
+                          <SkeletonText
+                            mt="4"
+                            noOfLines={1}
+                            spacing="4"
+                            skeletonHeight="50px"
+                          />
+                          <Skeleton
+                            height="300px"
+                            width="100%"
+                            mx="auto"
+                            rounded="10px"
+                          />
+                          <Skeleton height="250px" mt="5" />
+                        </div>
+                  </div>
+                </>
+               
               )}
             </div>
           </div>
