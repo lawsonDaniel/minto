@@ -19,7 +19,6 @@ import { Skeleton, SkeletonText } from "@chakra-ui/react";
 import { BigNumber, utils } from "ethers";
 import { parseIneligibility } from "@/utils/parseIneligibility";
 import { useToast } from "@chakra-ui/react";
-import "@rainbow-me/rainbowkit/styles.css";
 const myEditionDropContractAddress =
   "0x6540D7c31d30554b1f31eF7F0882c3b13be762A1";
 
