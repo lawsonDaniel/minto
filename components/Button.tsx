@@ -1,4 +1,10 @@
-import { useConnect } from "wagmi";
+import {
+  useAccount,
+  useConnect,
+  useDisconnect,
+  useEnsAvatar,
+  useEnsName,
+} from "wagmi";
 import {
   Menu,
   MenuButton,
@@ -13,12 +19,16 @@ import {
 import { VscChevronDown } from "react-icons/vsc";
 
 export function Profile() {
+  const { address, connector, isConnected } = useAccount();
   const { connect, connectors, error, isLoading, pendingConnector } =
     useConnect();
+  const { disconnect } = useDisconnect();
 
+  
   return (
     <div className="mt-10 flex flex-col gap-[10px]">
-      <Menu>
+    {
+      isConnected ? <button  className="bg-black text-xl text-[100] h-[60px] w-[200px] text-white" onClick={() => disconnect()}>Disconnect</button> :   <Menu>
         <MenuButton
           as={Button}
           w="200px"
@@ -49,6 +59,7 @@ export function Profile() {
             ))}
         </MenuList>
       </Menu>
+    }
 
       {error && <div className="text-red-500">{error.message}</div>}
     </div>

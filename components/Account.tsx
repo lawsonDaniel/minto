@@ -22,7 +22,7 @@ export function Account() {
         {ensAvatar && <Image src={ensAvatar} alt="ENS Avatar" />}
         <div>{ensName ? `${ensName} (${address})` : address}</div>
         <div>Connected to {connector?.name}</div>
-        <button onClick={() => disconnect}>Disconnect</button>
+        <button  className="bg-black text-xl text-[100] h-[60px] w-[200px] text-white" onClick={() => disconnect()}>Disconnect</button>
       </div>
     );
   }
